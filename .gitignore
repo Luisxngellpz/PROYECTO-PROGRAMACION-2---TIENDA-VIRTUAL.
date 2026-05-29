@@ -1,0 +1,5 @@
+/CoreStore_1/dist/
+build/ 
+dist/ 
+*.class 
+nbproject/private/ 
