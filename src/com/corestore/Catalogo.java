@@ -1,6 +1,7 @@
 package com.corestore;
 
 // ===== IMPORTACIONES =====
+import com.corestore.admin.PanelAdmin;
 import com.corestore.animaciones.CarritoAnimacion;
 import com.corestore.ventanas.VentanaCarrito;
 import com.corestore.ventanas.VentanaOfertas;
@@ -150,11 +151,31 @@ public class Catalogo extends Application {
             ventana.mostrar();
         });
 
-        HBox iconos = new HBox(
-                20,
-                favoritosBtn,
-                carritoBtn
+        // ===== BOTON ADMIN =====
+        Button adminBtn = new Button("🔧 Admin");
+
+        adminBtn.setStyle(
+                "-fx-background-color: #111111;" +
+                "-fx-text-fill: white;" +
+                "-fx-background-radius: 8;" +
+                "-fx-padding: 7 14 7 14;" +
+                "-fx-font-size: 13px;" +
+                "-fx-cursor: hand;"
         );
+
+        adminBtn.setOnAction(e -> {
+            PanelAdmin panel = new PanelAdmin();
+            panel.mostrar();
+        });
+
+        HBox iconos = new HBox(
+                15,
+                favoritosBtn,
+                carritoBtn,
+                adminBtn
+        );
+
+        iconos.setAlignment(Pos.CENTER_RIGHT);
 
         // ===== NAVBAR =====
         BorderPane navbar = new BorderPane();
@@ -306,8 +327,212 @@ public class Catalogo extends Application {
                         "⭐ 4.9",
                         "Nuevo",
                         false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/03_ipad.png",
+                        "iPad Pro 11",
+                        "€899",
+                        "⭐ 4.7",
+                        "Usado",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/04_airpods.png",
+                        "AirPods Pro 2",
+                        "€249",
+                        "⭐ 4.6",
+                        "Nuevo",
+                        true
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/05_magsafe.png",
+                        "Cargador MagSafe",
+                        "€45",
+                        "⭐ 4.5",
+                        "Reacondicionado",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/06_iphone13.png",
+                        "iPhone 13 Mini",
+                        "€769",
+                        "⭐ 4.4",
+                        "Usado",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/07_keyboard.png",
+                        "Smart Keyboard",
+                        "€199",
+                        "⭐ 4.3",
+                        "Reacondicionado",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/08_battery.png",
+                        "MagSafe Battery",
+                        "€129",
+                        "⭐ 4.2",
+                        "Usado",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/09_watch.png",
+                        "Apple Watch Series 8",
+                        "€499",
+                        "⭐ 4.7",
+                        "Nuevo",
+                        true
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/10_quantum.png",
+                        "Auriculares Quantum",
+                        "€19",
+                        "⭐ 4.5",
+                        "Nuevo",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/11_funda.png",
+                        "Funda iPhone",
+                        "€79",
+                        "⭐ 4.3",
+                        "Reacondicionado",
+                        false
+                ),
+
+                crearProducto(
+                        "/com/corestore/imag/12_display.png",
+                        "Studio Display 27",
+                        "€1799",
+                        "⭐ 4.9",
+                        "Nuevo",
+                        true
                 )
         );
+
+        // ===== BUSCADOR =====
+        Runnable buscarProductos = () -> {
+
+            String texto =
+                    buscador.getText().toLowerCase();
+
+            for (Node nodo : productos.getChildren()) {
+
+                VBox card = (VBox) nodo;
+
+                Label nombre =
+                        (Label) card.getChildren().get(2);
+
+                boolean mostrar =
+                        nombre.getText()
+                                .toLowerCase()
+                                .contains(texto);
+
+                card.setVisible(mostrar || texto.isEmpty());
+
+                card.setManaged(mostrar || texto.isEmpty());
+            }
+        };
+
+        buscar.setOnAction(e -> buscarProductos.run());
+
+        buscador.setOnAction(e -> buscarProductos.run());
+
+        // ===== FILTROS =====
+        aplicar.setOnAction(e -> {
+
+            for (Node nodo : productos.getChildren()) {
+
+                VBox card = (VBox) nodo;
+
+                Label nombre =
+                        (Label) card.getChildren().get(2);
+
+                Label precioLabel =
+                        (Label) card.getChildren().get(4);
+
+                Label condicionLabel =
+                        (Label) card.getChildren().get(6);
+
+                String texto =
+                        nombre.getText().toLowerCase();
+
+                String condicion =
+                        condicionLabel.getText().toLowerCase();
+
+                double valor =
+                        Double.parseDouble(
+                                precioLabel.getText()
+                                        .replace("€", "")
+                        );
+
+                boolean mostrar = true;
+
+                if (iphone.isSelected()
+                        && !texto.contains("iphone"))
+                    mostrar = false;
+
+                if (macbook.isSelected()
+                        && !texto.contains("macbook"))
+                    mostrar = false;
+
+                if (ipad.isSelected()
+                        && !texto.contains("ipad"))
+                    mostrar = false;
+
+                if (valor > slider.getValue())
+                    mostrar = false;
+
+                if (nuevo.isSelected()
+                        && !condicion.contains("nuevo"))
+                    mostrar = false;
+
+                if (usado.isSelected()
+                        && !condicion.contains("usado"))
+                    mostrar = false;
+
+                if (reacondicionado.isSelected()
+                        && !condicion.contains("reacondicionado"))
+                    mostrar = false;
+
+                card.setVisible(mostrar);
+
+                card.setManaged(mostrar);
+            }
+        });
+
+        // ===== LIMPIAR =====
+        limpiar.setOnAction(e -> {
+
+            iphone.setSelected(false);
+
+            macbook.setSelected(false);
+
+            ipad.setSelected(false);
+
+            condiciones.selectToggle(null);
+
+            slider.setValue(2000);
+
+            buscador.clear();
+
+            for (Node nodo : productos.getChildren()) {
+
+                nodo.setVisible(true);
+
+                nodo.setManaged(true);
+            }
+        });
 
         // ===== SCROLL =====
         ScrollPane scroll =
