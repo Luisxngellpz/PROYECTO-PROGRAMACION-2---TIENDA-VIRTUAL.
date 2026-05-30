@@ -116,7 +116,7 @@ public class VentanaCarrito {
             vacio.setTextFill(Color.GRAY);
             listaBox.getChildren().add(vacio);
             Catalogo.carritoCantidad = 0;
-            Catalogo.carritoBtn.setText("0");
+            Catalogo.carritoBtn.setText("🛒 0");
             lblTotal.setText(calcularTotal());
             lblContador.setText("0 producto(s)");
         });
@@ -157,7 +157,7 @@ public class VentanaCarrito {
             vacio.setTextFill(Color.GRAY);
             listaBox.getChildren().add(vacio);
             Catalogo.carritoCantidad = 0;
-            Catalogo.carritoBtn.setText("0");
+            Catalogo.carritoBtn.setText("🛒 0");
             lblTotal.setText(calcularTotal());
             lblContador.setText("0 producto(s)");
             stage.close();
